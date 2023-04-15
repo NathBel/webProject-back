@@ -30,7 +30,6 @@ Appointment.getAll = result => {
             result(null, err);
             return;
         }
-        console.log("appointments: ", res);
         result(null, res);
     });
 };
@@ -44,7 +43,6 @@ Appointment.findById = (appointmentId, result) => {
             return;
         }
         if (res.length) {
-            console.log("found appointment: ", res[0]);
             result(null, res[0]);
             return;
         }
@@ -65,7 +63,6 @@ Appointment.findByIdUser = (appointmentIdUser, result) => {
             // not found Appointment with the id
             result({ kind: "not_found" }, null);
         } else {
-            console.log("found appointment: ", res);
             result(null, res);
             return;
         }
@@ -85,7 +82,6 @@ Appointment.findByIdAgent = (appointmentIdAgent, result) => {
             // not found Appointment with the id
             result({ kind: "not_found" }, null);
         } else {
-            console.log("found appointment: ", res);
             result(null, res);
             return;
         }
@@ -106,7 +102,6 @@ Appointment.updateById = (id, appointment, result) => {
             result({ kind: "not_found" }, null);
             return;
         }
-        console.log("updated appointment: ", { id_appointment: id, ...appointment });
         result(null, { id_appointment: id, ...appointment });
     });
 };

@@ -29,7 +29,6 @@ Agent.getAll = result => {
         result(null, err);
         return;
       }
-      console.log("agents: ", res);
       result(null, res);
     });
   };
@@ -43,7 +42,6 @@ Agent.findById = (agentId, result) => {
             return;
         }
         if (res.length) {
-            console.log("found agent: ", res[0]);
             result(null, res[0]);
             return;
         }
@@ -65,7 +63,6 @@ Agent.findByAgency = (agentAgency, result) => {
             result({ kind: "not_found" }, null);
         }
         else{
-            console.log("found agent: ", res);
             result(null, res);
             return;
         }
@@ -86,7 +83,6 @@ Agent.updateById = (id, agent, result) => {
             result({ kind: "not_found" }, null);
             return;
         }
-        console.log("updated agent: ", { id: id, ...agent });
         result(null, { id: id, ...agent });
     });
 };

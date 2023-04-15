@@ -1,4 +1,5 @@
 const User = require('../models/userModel.js');
+const hash = require("../services/hashPassword-service.js");
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -25,11 +26,17 @@ exports.create = (req, res) => {
 
     // Save User in the database
     User.create(user, (err, data) => {
-        if (err)
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while creating the User."
-            });
+        if (err) {
+            if (err.kind === "email_cannot_be_null") {
+                res.status(404).send({
+                    message: `email format is not valid.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Some error occurred while creating the User."
+                });
+            }
+        }
         else res.send(data);
     });
 };
@@ -63,9 +70,9 @@ exports.findById = (req, res) => {
     });
 };
 
-// Find a single User with a email
-exports.findByEmail = (req, res) => {
-    User.findByEmail(req.params.userEmail, (err, data) => {
+// login a single User with a userEmail and password
+exports.login = (req, res) => {
+    User.login(req.body.userEmail, (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
@@ -76,7 +83,17 @@ exports.findByEmail = (req, res) => {
                     message: "Error retrieving User with id " + req.params.userEmail
                 });
             }
-        } else res.send(data);
+        } else {
+            console.log(data.password, req.body.password);
+            if(hash.comparePassword(req.body.password, data.password)) {
+                res.send('Connexion réussie')
+            } 
+            else {
+                res.status(500).send({
+                    message: "password incorrect"
+                });
+            }  
+        };
     });
 };
 

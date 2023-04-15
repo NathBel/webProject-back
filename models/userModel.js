@@ -1,6 +1,10 @@
 const sql = require("../db.js");
+const validator = require("../services/validator-service.js");
+const hash = require("../services/hashPassword-service.js");
+const jwt = require("../services/jwt-service.js");
 
 // Constructor
+
 const User = function(user){
     this.id_user = user.id_user;
     this.firstname = user.firstname;
@@ -9,22 +13,35 @@ const User = function(user){
     this.address = user.address;
     this.city = user.city;
     this.zip_code = user.zip_code;
-    this.email = user.email;
-    this.password = user.password;
+    //Check if email is valid
+    if(validator.validateEmail(user.email)){
+        this.email = user.email;
+    } else {
+        console.log("Invalid email");
+    }
+    // Hash password
+    this.password = hash.hashPassword(10, user.password);
     this.isAdmin = user.isAdmin;
 }
 
 // Add  user in the database
 User.create = (newUser, result) => {
-    sql.query("INSERT INTO user SET ?", newUser, (err, res) => {
-        if (err) {
-            console.log("error: ", err);
-            result(err, null);
-            return;
-        }
-        console.log("created user: ", { id_user: res.insertId, ...newUser });
-        result(null, { id_user: res.insertId, ...newUser });
-    });
+    if (newUser.email == undefined){
+        result({ kind: "email_cannot_be_null" }, null);
+    }
+    else{
+        console.log(newUser);
+        sql.query("INSERT INTO user SET ?", newUser, (err, res) => {
+            if (err) {
+                console.log("error: ", err);
+                result(err, null);
+                return;
+            }
+            
+            console.log("created user: ", { id_user: res.insertId, ...newUser });
+            result(null, { id_user: res.insertId, ...newUser });
+        });
+    }
 };
 
 //Get all users in database
@@ -35,7 +52,6 @@ User.getAll = result => {
         result(null, err);
         return;
       }
-      console.log("users: ", res);
       result(null, res);
     });
   };
@@ -49,7 +65,6 @@ User.findById = (userId, result) => {
             return;
         }
         if (res.length) {
-            console.log("found user: ", res[0]);
             result(null, res[0]);
             return;
         }
@@ -58,16 +73,17 @@ User.findById = (userId, result) => {
     });
 };
 
-//Get user by email
-User.findByEmail = (userEmail, result) => {
-    sql.query(`SELECT * FROM user WHERE email = '${userEmail}`, (err, res) => {
+//Login user
+User.login = (userEmail, result) => {
+    sql.query(`SELECT * FROM user WHERE email = '${userEmail}'`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
             return;
         }
         if (res.length) {
-            console.log("found user: ", res[0]);
+            const token = jwt.generateToken(res[0].id_user, res[0].isAdmin);
+            console.log(token);
             result(null, res[0]);
             return;
         }
@@ -89,7 +105,6 @@ User.updateById = (id, user, result) => {
             result({ kind: "not_found" }, null);
             return;
         }
-        console.log("updated user: ", { id: id, ...user });
         result(null, { id: id, ...user });
     });
 };
@@ -111,8 +126,6 @@ User.remove = (id, result) => {
         result(null, res);
     });
 };
-
-
 
 
 module.exports = User;

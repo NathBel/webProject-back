@@ -29,7 +29,6 @@ Agency.getAll = result => {
         result(null, err);
         return;
       }
-      console.log("agencies: ", res);
       result(null, res);
     });
   };
@@ -43,7 +42,6 @@ Agency.findById = (agencyId, result) => {
             return;
         }
         if (res.length) {
-            console.log("found agency: ", res[0]);
             result(null, res[0]);
             return;
         }
@@ -66,7 +64,6 @@ Agency.updateById = (id, agency, result) => {
             result({ kind: "not_found" }, null);
             return;
         }
-        console.log("updated agency: ", { id: id, ...agency });
         result(null, { id: id, ...agency });
     });
 };

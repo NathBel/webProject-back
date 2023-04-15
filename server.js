@@ -1,9 +1,28 @@
 // wiki.js - Wiki route module
 const express = require('express');
+const morgan = require('morgan');
+const createError = require('http-errors');
+const compression = require('compression');
+const rateLimit = require('express-rate-limit')
+
+const port = process.env.PORT || 8000;
 
 const app = express();
 
+const limiter = rateLimit({
+	windowMs: 10 * 60 * 1000, // 10 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 10 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
 app.use(express.json());
+//log all requests to the console
+app.use(morgan('dev'));
+//compress all responses
+app.use(compression());
+// Apply the rate limiting middleware to all requests
+app.use(limiter)
 
 const housingRoute = require('./routes/housingRoute');
 const userRoute = require('./routes/userRoute');
@@ -21,8 +40,11 @@ app.use('/appointment',appointmentRoute);
 app.use('/likes',likesRoute);
 app.use('/photos',photosRoute);
 
+app.use((req, res, next) => {
+  next(createError(404));
+});
 
-app.listen(8000,function(){
+app.listen(port,function(){
   console.log("Live at Port 8000");
 });
 

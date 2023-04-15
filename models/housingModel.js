@@ -37,7 +37,6 @@ Housing.getAll = result => {
       result(null, err);
       return;
     }
-    console.log("housing: ", res);
     result(null, res);
   });
 };
@@ -52,7 +51,6 @@ Housing.getHousingById = (id_housing, result) => {
     }
 
     if (res.length) {
-      console.log("found housing: ", res[0]);
       result(null, res[0]);
       return;
     }
@@ -76,7 +74,6 @@ Housing.getHousingByType = (type_housing, result) => {
       result({ kind: "not_found" }, null);
     }
     else {
-      console.log("housing: ", res);
       result(null, res);
     }
   });
@@ -96,7 +93,6 @@ Housing.getHousingByCity = (city, result) => {
       result({ kind: "not_found" }, null);
     }
     else {
-      console.log("housing: ", res);
       result(null, res);
     }
   });
@@ -116,7 +112,6 @@ Housing.getHousingByZipCode = (zip_code, result) => {
       result({ kind: "not_found" }, null);
     }
     else {
-      console.log("housing: ", res);
       result(null, res);
     }
   });
@@ -136,7 +131,6 @@ Housing.getHousingByPrice = (min_price, max_price, result) => {
       result({ kind: "not_found" }, null);
     }
     else {
-      console.log("housing: ", res);
       result(null, res);
     }
   });
@@ -156,7 +150,6 @@ Housing.getHousingByLivingSurface = (min_surface, max_surface, result) => {
       result({ kind: "not_found" }, null);
     }
     else {
-      console.log("housing: ", res);
       result(null, res);
     }
   });
@@ -180,7 +173,6 @@ Housing.updateById = (id, housing, result) => {
         return;
       }
 
-      console.log("updated housing: ", { id: id, ...housing });
       result(null, { id: id, ...housing });
     }
   );

@@ -31,7 +31,6 @@ Likes.getAllByIdUser = (idUser, result) => {
             // not found Appointment with the id
             result({ kind: "not_found" }, null);
         } else {
-            console.log("likes: ", res);
             result(null, res);
             return;
         }

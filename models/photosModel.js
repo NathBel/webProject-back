@@ -31,7 +31,6 @@ Photos.getAllByIdHousing = (idHousing, result) => {
             // not found Appointment with the id
             result({ kind: "not_found" }, null);
         } else {
-            console.log("photos: ", res);
             result(null, res);
             return;
         }
