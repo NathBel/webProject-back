@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const createError = require('http-errors');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit')
+const cors = require('cors');
 
 const port = process.env.PORT || 8000;
 
@@ -11,7 +12,7 @@ const app = express();
 
 const limiter = rateLimit({
 	windowMs: 10 * 60 * 1000, // 10 minutes
-	max: 100, // Limit each IP to 100 requests per `window` (here, per 10 minutes)
+	max: 1000, // Limit each IP to 1000 requests per `window` (here, per 10 minutes)
 	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
 	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 })
@@ -23,6 +24,11 @@ app.use(morgan('dev'));
 app.use(compression());
 // Apply the rate limiting middleware to all requests
 app.use(limiter)
+
+app.use(cors({
+	origin: "*",
+	credentials: true,
+}))
 
 const housingRoute = require('./routes/housingRoute');
 const userRoute = require('./routes/userRoute');

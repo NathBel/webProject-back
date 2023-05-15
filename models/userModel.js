@@ -1,7 +1,7 @@
 const sql = require("../db.js");
 const validator = require("../services/validator-service.js");
 const hash = require("../services/hashPassword-service.js");
-const jwt = require("../services/jwt-service.js");
+
 
 // Constructor
 
@@ -73,6 +73,23 @@ User.findById = (userId, result) => {
     });
 };
 
+//Get user by email
+User.findByEmail = (userEmail, result) => {
+    sql.query(`SELECT * FROM user WHERE email = '${userEmail}'`, (err, res) => {
+        if (err) {
+            console.log("error: ", err);
+            result(err, null);
+            return;
+        }
+        if (res.length) {
+            result(null, res[0]);
+            return;
+        }
+        // not found User with the email
+        result({ kind: "not_found" }, null);
+    });
+};
+
 //Login user
 User.login = (userEmail, result) => {
     sql.query(`SELECT * FROM user WHERE email = '${userEmail}'`, (err, res) => {
@@ -82,8 +99,6 @@ User.login = (userEmail, result) => {
             return;
         }
         if (res.length) {
-            const token = jwt.generateToken(res[0].id_user, res[0].isAdmin);
-            console.log(token);
             result(null, res[0]);
             return;
         }
@@ -94,7 +109,7 @@ User.login = (userEmail, result) => {
 
 //Update user by id
 User.updateById = (id, user, result) => {
-    sql.query("UPDATE user SET firstname = ?, lastname = ?, mobile_phone = ?, address = ?, city = ?, zip_code = ?, email = ?, password = ?, isAdmin = ? WHERE id_user = ?", [user.firstname, user.lastname, user.mobile_phone, user.address, user.city, user.zip_code, user.email, user.password, user.isAdmin, id], (err, res) => {
+    sql.query("UPDATE user SET firstname = ?, lastname = ?, mobile_phone = ?, address = ?, city = ?, zip_code = ?, email = ? WHERE id_user = ?", [user.firstname, user.lastname, user.mobile_phone, user.address, user.city, user.zip_code, user.email, id], (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(null, err);

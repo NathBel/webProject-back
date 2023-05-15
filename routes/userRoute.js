@@ -15,8 +15,11 @@ router.get('/', userController.getAll);
 //Get user by id
 router.get('/:id_user', userController.findById);
 
+//Get user by email
+router.get('/email/:email', userController.findByEmail);
+
 //Update user by id
-router.put('/:id_user', userController.update);
+router.put('/:id_user', userController.updateById);
 
 //Delete user by id
 router.delete('/:id_user', userController.delete);

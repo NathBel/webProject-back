@@ -17,7 +17,7 @@ const upload = multer({storage: storage});
 router.post('/', upload.single('photo') ,photosController.create);
 
 //Get all photos by housing
-router.get('/housing/:id_housing', photosController.getAllByIdHousing);
+router.get('/:id_housing', photosController.getAllByIdHousing);
 
 //Delete photo by id
 router.delete('/:id_photos', photosController.remove);

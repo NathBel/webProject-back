@@ -13,6 +13,7 @@ exports.create = (req, res) => {
 
     // Create a Housing
     const housing = new Housing({
+        type: req.body.type,
         price: req.body.price,
         address: req.body.address,
         city: req.body.city,
@@ -22,7 +23,8 @@ exports.create = (req, res) => {
         description: req.body.description,
         number_room: req.body.number_room,
         energy_performance: req.body.energy_performance,
-        type: req.body.type
+        location: req.body.location,
+        sale: req.body.sale,
     });
 
     // Save Housing in the database
@@ -84,6 +86,24 @@ exports.getHousingByType = (req, res) => {
   });
 };
 
+//Get city
+exports.getCity = (req, res) => {
+  Housing.getCity(req.params.startCity, (err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        res.status(404).send({
+          message: `Not found Housing with city ${req.params.city}.`
+        });
+      } else {
+        res.status(500).send({
+          message: "Some error occurred while retrieving Housing with city " + req.params.city
+        });
+      }
+    } 
+    else res.send(data);
+    });
+};
+
 //Get housing by city
 exports.getHousingByCity = (req, res) => {
   Housing.getHousingByCity(req.params.city, (err, data) => {
@@ -120,6 +140,31 @@ exports.getHousingByZipCode = (req, res) => {
   });
 };
 
+//Get max price
+exports.getMaxPrice = (req, res) => {
+  Housing.getMaxPrice((err, data) => { 
+    if (err) {
+        res.status(500).send({
+          message: "Some error occurred while retrieving Housing with max price."
+        });
+      }
+    else res.send(data);
+  });
+};
+
+//Get min price
+exports.getMinPrice = (req, res) => {
+  Housing.getMinPrice((err, data) => { 
+    if (err) {
+        res.status(500).send({
+          message: "Some error occurred while retrieving Housing with min price."
+        });
+      }
+    else res.send(data);
+  });
+};
+
+
 //Get housing by min and max price
 exports.getHousingByPrice = (req, res) => {
   Housing.getHousingByPrice(req.params.min_price, req.params.max_price, (err, data) => {
@@ -138,6 +183,72 @@ exports.getHousingByPrice = (req, res) => {
   });
 };
 
+//Get max global surface
+exports.getMaxGlobalSurface = (req, res) => {
+  Housing.getMaxGlobalSurface((err, data) => {
+    if (err) {
+        res.status(500).send({
+          message: "Some error occurred while retrieving Housing with max global surface."
+        });
+      }
+    else res.send(data);
+  });
+};
+
+//Get min global surface
+exports.getMinGlobalSurface = (req, res) => {
+  Housing.getMinGlobalSurface((err, data) => {
+    if (err) {
+        res.status(500).send({
+          message: "Some error occurred while retrieving Housing with min global surface."
+        });
+      }
+    else res.send(data);
+  });
+};
+
+//Get housing by min and max global surface
+exports.getHousingByGlobalSurface = (req, res) => {
+  Housing.getHousingByGlobalSurface(req.params.min_global_surface, req.params.max_global_surface, (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found Housing with this range of global surface :  ${req.params.min_surface} - ${req.params.max_surface}.`
+          });
+        } else {
+          res.status(500).send({
+            message: `Some error occurred while retrieving Housing with this range of global surface :  ${req.params.min_surface} - ${req.params.max_surface}.`
+          });
+        }
+      }
+    else res.send(data);
+  });
+};
+
+//Get max living surface
+exports.getMaxLivingSurface = (req, res) => {
+  Housing.getMaxLivingSurface((err, data) => {
+    if (err) {
+        res.status(500).send({
+          message: "Some error occurred while retrieving Housing with max living surface."
+        });
+      }
+    else res.send(data);
+  });
+};
+
+//Get min living surface
+exports.getMinLivingSurface = (req, res) => {
+  Housing.getMinLivingSurface((err, data) => {
+    if (err) {
+        res.status(500).send({
+          message: "Some error occurred while retrieving Housing with min living surface."
+        });
+      }
+    else res.send(data);
+  });
+};
+
 //Get housing by min and max living surface
 exports.getHousingByLivingSurface = (req, res) => {
   Housing.getHousingByLivingSurface(req.params.min_surface, req.params.max_surface, (err, data) => {
@@ -152,6 +263,60 @@ exports.getHousingByLivingSurface = (req, res) => {
           });
         }
       } 
+    else res.send(data);
+  });
+};
+
+//Get housing in rent
+exports.getHousingInRent = (req, res) => {
+  Housing.getHousingInRent((err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found Housing in rent.`
+          });
+        } else {
+          res.status(500).send({
+            message: `Some error occurred while retrieving Housing in rent.`
+          });
+        }
+      }
+    else res.send(data);
+  });
+};
+
+//Get housing in sale
+exports.getHousingInSale = (req, res) => {
+  Housing.getHousingInSale((err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found Housing in sale.`
+          });
+        } else {
+          res.status(500).send({
+            message: `Some error occurred while retrieving Housing in sale.`
+          });
+        }
+      }
+    else res.send(data);
+  });
+};
+
+//Get housing from research
+exports.getHousingFromResearch = (req, res) => {
+  Housing.getHousingFromResearch(req.params.city, req.params.max_price, req.params.min_price, req.params.max_global_surface, req.params.min_global_surface, req.params.max_living_surface, req.params.min_living_surface, (err, data) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          res.status(404).send({
+            message: `Not found Housing with this research :  ${req.params.research}.`
+          });
+        } else {
+          res.status(500).send({
+            message: `Some error occurred while retrieving Housing with this research :  ${req.params.research}.`
+          });
+        }
+      }
     else res.send(data);
   });
 };

@@ -1,5 +1,6 @@
 const User = require('../models/userModel.js');
 const hash = require("../services/hashPassword-service.js");
+const jwt = require("../services/jwt-service.js");
 
 // Create and Save a new User
 exports.create = (req, res) => {
@@ -70,9 +71,26 @@ exports.findById = (req, res) => {
     });
 };
 
+//Find user by email
+exports.findByEmail = (req, res) => {
+    User.findByEmail(req.params.email, (err, data) => {
+        if (err) {
+            if (err.kind === "not_found") {
+                res.status(404).send({
+                    message: `Not found User with email ${req.params.email}.`
+                });
+            } else {
+                res.status(500).send({
+                    message: "Error retrieving User with email " + req.params.email
+                });
+            }
+        } else res.send(data);
+    });
+};
+
 // login a single User with a userEmail and password
 exports.login = (req, res) => {
-    User.login(req.body.userEmail, (err, data) => {
+    User.login(req.body.userEmail, async (err, data) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
@@ -86,7 +104,8 @@ exports.login = (req, res) => {
         } else {
             console.log(data.password, req.body.password);
             if(hash.comparePassword(req.body.password, data.password)) {
-                res.send('Connexion réussie')
+                const token = await jwt.generateToken(data.id_user, data.isAdmin, data.firstname, data.lastname, data.email);
+                res.json({ 'token': token });
             } 
             else {
                 res.status(500).send({
@@ -98,7 +117,7 @@ exports.login = (req, res) => {
 };
 
 // Update a User identified by the id_user in the request
-exports.update = (req, res) => {
+exports.updateById = (req, res) => {
     // Validate Request
     if (!req.body) {
         res.status(400).send({
@@ -108,7 +127,7 @@ exports.update = (req, res) => {
 
     User.updateById(
         req.params.id_user,
-        new User(req.body),
+        req.body,
         (err, data) => {
             if (err) {
                 if (err.kind === "not_found") {

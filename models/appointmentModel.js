@@ -36,7 +36,7 @@ Appointment.getAll = result => {
 
 // Find a single Appointment with an id
 Appointment.findById = (appointmentId, result) => {
-    sql.query(`SELECT * FROM appointment WHERE id_appointment = ${appointmentId}`, (err, res) => {
+    sql.query(`SELECT * FROM appointment WHERE id_appointment = ${appointmentId} ORDER BY date`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -53,7 +53,7 @@ Appointment.findById = (appointmentId, result) => {
 
 // Find Appointments with an id_user
 Appointment.findByIdUser = (appointmentIdUser, result) => {
-    sql.query(`SELECT * FROM appointment WHERE id_user = ${appointmentIdUser}`, (err, res) => {
+    sql.query(`SELECT * FROM appointment WHERE id_user = ${appointmentIdUser} ORDER BY date, time`, (err, res) => {
         if (err) {
             console.log("error: ", err);
             result(err, null);
@@ -91,6 +91,7 @@ Appointment.findByIdAgent = (appointmentIdAgent, result) => {
 
 // Update a Appointment identified by the id in the request
 Appointment.updateById = (id, appointment, result) => {
+    console.log(appointment);
     sql.query("UPDATE appointment SET date = ?, time = ?, id_user = ?, id_housing = ?, id_agent = ? WHERE id_appointment = ?", [appointment.date, appointment.time, appointment.id_user, appointment.id_housing, appointment.id_agent, id], (err, res) => {
         if (err) {
             console.log("error: ", err);

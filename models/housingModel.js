@@ -3,6 +3,7 @@ const sql = require("../db.js");
 // Constructor
 const Housing = function(housing) {
   this.id_housing = housing.id_housing;
+  this.type = housing.type;
   this.price = housing.price;
   this.address = housing.address;
   this.city = housing.city;
@@ -12,7 +13,8 @@ const Housing = function(housing) {
   this.description = housing.description;
   this.number_room = housing.number_room;
   this.energy_performance = housing.energy_performance;
-  this.type = housing.type;
+  this.location = housing.location;
+  this.sale = housing.sale;
 };
 
 // Add  housing in the database
@@ -79,6 +81,26 @@ Housing.getHousingByType = (type_housing, result) => {
   });
 };
 
+// Get city
+Housing.getCity = (startCity, result) => {
+  startCity = startCity + "%";
+  sql.query("SELECT city FROM housing WHERE city LIKE ?",startCity, (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    if (res.length == 0) {
+      // not found city
+      result({ kind: "not_found" }, null);
+    }
+    else {
+      result(null, res);
+    }
+  });
+};
+
 // Get housing by city
 Housing.getHousingByCity = (city, result) => {
   sql.query("SELECT * FROM housing WHERE city = ?",city, (err, res) => {
@@ -117,9 +139,33 @@ Housing.getHousingByZipCode = (zip_code, result) => {
   });
 };
 
+// Get max price
+Housing.getMaxPrice = (result) => {
+  sql.query("SELECT MAX(price) as max FROM housing", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+      result(null, res);
+  });
+};
+
+// Get min price
+Housing.getMinPrice = (result) => {
+  sql.query("SELECT MIN(price) as min FROM housing", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+      result(null, res);
+  });
+};
+
 // Get housing by min and max price
 Housing.getHousingByPrice = (min_price, max_price, result) => {
-  sql.query("SELECT * FROM housing WHERE price > ? and price < ?",[min_price, max_price], (err, res) => {
+  sql.query("SELECT * FROM housing WHERE price >= ? and price <= ?",[min_price, max_price], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -136,9 +182,75 @@ Housing.getHousingByPrice = (min_price, max_price, result) => {
   });
 };
 
+// Get max global_surface
+Housing.getMaxGlobalSurface = (result) => {
+  sql.query("SELECT MAX(global_surface) as max FROM housing", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+      result(null, res);
+  });
+};
+
+// Get min global_surface
+Housing.getMinGlobalSurface = (result) => {
+  sql.query("SELECT MIN(global_surface) as min FROM housing", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+      result(null, res);
+  });
+};
+
+// Get housing by min and max global_surface
+Housing.getHousingByGlobalSurface = (min_surface, max_surface, result) => {
+  sql.query("SELECT * FROM housing WHERE global_surface >= ? and global_surface <= ?",[min_surface, max_surface], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+    if (res.length == 0) {
+      // not found Housing with this surface range
+      result({ kind: "not_found" }, null);
+    }
+    else {
+      result(null, res);
+    }
+  });
+};
+
+// Get max living surface
+Housing.getMaxLivingSurface = (result) => {
+  sql.query("SELECT MAX(living_surface) as max FROM housing", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+      result(null, res);
+  });
+};
+
+// Get min living surface
+Housing.getMinLivingSurface = (result) => {
+  sql.query("SELECT MIN(living_surface) as min FROM housing", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+      result(null, res);
+  });
+};
+
 // Get housing by min and max living surface
 Housing.getHousingByLivingSurface = (min_surface, max_surface, result) => {
-  sql.query("SELECT * FROM housing WHERE living_surface > ? and living_surface < ?",[min_surface, max_surface], (err, res) => {
+  sql.query("SELECT * FROM housing WHERE living_surface >= ? and living_surface <= ?",[min_surface, max_surface], (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -147,6 +259,50 @@ Housing.getHousingByLivingSurface = (min_surface, max_surface, result) => {
 
     if (res.length == 0) {
       // not found Housing with this surface range
+      result({ kind: "not_found" }, null);
+    }
+    else {
+      result(null, res);
+    }
+  });
+};
+
+//Get housing in rent
+Housing.getHousingInRent = (result) => {
+  sql.query("SELECT * FROM housing WHERE location = 1", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+      result(null, res);
+  });
+};
+
+//Get housing in sale
+Housing.getHousingInSale = (result) => {
+  sql.query("SELECT * FROM housing WHERE sale = 1", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+      result(null, res);
+  });
+};
+
+//Get housing from research
+Housing.getHousingFromResearch = (city, max_price, min_price, max_global_surface, min_global_surface, max_living_surface, min_living_surface, result) => {
+  city === "pourcentage" ? city = "%" : city = city;
+  sql.query("SELECT * FROM housing WHERE city LIKE ? AND price >= ? AND price <= ? AND global_surface >= ? AND global_surface <= ? AND living_surface >= ? AND living_surface <= ?",[city, min_price, max_price, min_global_surface, max_global_surface, min_living_surface, max_living_surface], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    if (res.length == 0) {
+      // not found Housing with this research
       result({ kind: "not_found" }, null);
     }
     else {
