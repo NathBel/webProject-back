@@ -6,7 +6,7 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit')
 const cors = require('cors');
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 5000;
 
 const app = express();
 
