@@ -23,12 +23,12 @@ app.use(morgan('dev'));
 //compress all responses
 app.use(compression());
 // Apply the rate limiting middleware to all requests
-app.use(limiter)
+app.use(limiter);
 
 app.use(cors({
 	origin: "*",
 	credentials: true,
-}))
+}));
 
 const housingRoute = require('./routes/housingRoute');
 const userRoute = require('./routes/userRoute');

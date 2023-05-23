@@ -94,7 +94,7 @@ exports.login = (req, res) => {
         if (err) {
             if (err.kind === "not_found") {
                 res.status(404).send({
-                    message: `Not found User with id ${req.params.userEmail}.`
+                    message: `Not found User with email ${req.params.userEmail}.`
                 });
             } else {
                 res.status(500).send({
@@ -102,8 +102,7 @@ exports.login = (req, res) => {
                 });
             }
         } else {
-            console.log(data.password, req.body.password);
-            if(hash.comparePassword(req.body.password, data.password)) {
+            if(hash.comparePassword(hash.decryptPassword(req.body.password), data.password)) {
                 const token = await jwt.generateToken(data.id_user, data.isAdmin, data.firstname, data.lastname, data.email);
                 res.json({ 'token': token });
             } 

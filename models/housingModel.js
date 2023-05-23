@@ -314,8 +314,8 @@ Housing.getHousingFromResearch = (city, max_price, min_price, max_global_surface
 //Update a housing identified by the housingId in the request
 Housing.updateById = (id, housing, result) => {
   sql.query(
-    "UPDATE housing SET price = ?, address = ?, city = ?, zip_code = ?, global_surface = ?, living_surface = ?, description = ?, number_room = ?, energy_performance = ?, type = ? WHERE id_housing = ?",
-    [housing.price, housing.address, housing.city, housing.zip_code, housing.global_surface, housing.living_surface, housing.description, housing.number_room, housing.energy_performance, housing.type, id],
+    "UPDATE housing SET price = ?, address = ?, city = ?, zip_code = ?, global_surface = ?, living_surface = ?, description = ?, number_room = ?, energy_performance = ?, type = ?, location = ?, sale = ? WHERE id_housing = ?",
+    [housing.price, housing.address, housing.city, housing.zip_code, housing.global_surface, housing.living_surface, housing.description, housing.number_room, housing.energy_performance, housing.type, housing.location, housing.sale, id],
     (err, res) => {
       if (err) {
         console.log("error: ", err);

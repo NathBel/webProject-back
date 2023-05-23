@@ -23,7 +23,7 @@ Agency.create = (newAgency, result) => {
 
 //Get all agencies in database
 Agency.getAll = result => {
-    sql.query("SELECT * FROM real_estate_agency", (err, res) => {
+    sql.query("SELECT * FROM real_estate_agency ORDER BY zip_code", (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(null, err);

@@ -2,7 +2,6 @@ const sql = require("../db.js");
 const validator = require("../services/validator-service.js");
 const hash = require("../services/hashPassword-service.js");
 
-
 // Constructor
 
 const User = function(user){
@@ -20,7 +19,7 @@ const User = function(user){
         console.log("Invalid email");
     }
     // Hash password
-    this.password = hash.hashPassword(10, user.password);
+    this.password = hash.hashPassword(10, hash.decryptPassword(user.password));
     this.isAdmin = user.isAdmin;
 }
 
