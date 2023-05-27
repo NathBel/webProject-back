@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const jwtservice = require('../services/jwt-service');
 
 const housingController = require('../controllers/housingController');
 
@@ -58,13 +59,13 @@ router.get('/sale', housingController.getHousingInSale);
 router.get('/research/:city/:max_price/:min_price/:max_global_surface/:min_global_surface/:max_living_surface/:min_living_surface', housingController.getHousingFromResearch);
 
 //Add a new housing
-router.post('/', housingController.create);
+router.post('/', jwtservice.requireAdmin, housingController.create);
 
 //Update housing from id
-router.put('/:id', housingController.update);
+router.put('/:id', jwtservice.requireAdmin, housingController.update);
 
 //Delete housing from id
-router.delete('/:id', housingController.delete);
+router.delete('/:id', jwtservice.requireAdmin, housingController.delete);
 
 
 

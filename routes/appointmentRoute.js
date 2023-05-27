@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const jwtservice = require('../services/jwt-service');
 
 const appointmentController = require('../controllers/appointmentController');
 
@@ -7,7 +8,7 @@ const appointmentController = require('../controllers/appointmentController');
 router.post('/', appointmentController.create);
 
 //Get all appointments in database
-router.get('/', appointmentController.getAll);
+router.get('/', jwtservice.requireAdmin, appointmentController.getAll);
 
 //Get appointment by id
 router.get('/:id_appointment', appointmentController.findById);

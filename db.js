@@ -14,29 +14,10 @@ const connection = mysql.createConnection({
          user: params.auth.split(':')[0],
          password: params.auth.split(':')[1],
          database: params.pathname.slice(1),
-         port: params.port,
-
-         
+         port: params.port, 
 });
 
-// open the MySQL connection
-connection.connect(error => {
-    if (error) throw error;
-    console.log("Successfully connected to the database.");
-    connection.execute("SHOW TABLES", (err, res) => {
-        if (err) {
-          console.log("error: ", err);
-          return;
-        }
-        console.log("All tables: ", res);
-      }
-    );
-  });
-  
-  module.exports = connection;
-
-
-
+module.exports = connection;
 
 
 

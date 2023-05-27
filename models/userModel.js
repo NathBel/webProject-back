@@ -20,7 +20,7 @@ const User = function(user){
     }
     // Hash password
     this.password = hash.hashPassword(10, hash.decryptPassword(user.password));
-    this.isAdmin = user.isAdmin;
+    this.isAdmin = false;
 }
 
 // Add  user in the database

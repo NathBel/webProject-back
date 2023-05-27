@@ -27,7 +27,10 @@ SET time_zone = "+00:00";
 -- Structure de la table `appointment`
 --
 
-CREATE TABLE `appointment` (
+CREATE DATABASE IF NOT EXISTS `nathimmo_database`;
+USE `nathimmo_database`;
+
+CREATE TABLE IF NOT EXISTS `appointment` (
   `id_appointment` int(11) NOT NULL,
   `date` date NOT NULL,
   `time` time NOT NULL,
@@ -57,7 +60,7 @@ INSERT INTO `appointment` (`id_appointment`, `date`, `time`, `id_user`, `id_hous
 -- Structure de la table `housing`
 --
 
-CREATE TABLE `housing` (
+CREATE TABLE IF NOT EXISTS `housing` (
   `id_housing` int(11) NOT NULL,
   `price` int(11) NOT NULL,
   `address` varchar(50) NOT NULL,
@@ -92,7 +95,7 @@ INSERT INTO `housing` (`id_housing`, `price`, `address`, `city`, `zip_code`, `gl
 -- Structure de la table `likes`
 --
 
-CREATE TABLE `likes` (
+CREATE TABLE IF NOT EXISTS `likes` (
   `id_user` int(11) NOT NULL,
   `id_housing` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -121,7 +124,7 @@ INSERT INTO `likes` (`id_user`, `id_housing`) VALUES
 -- Structure de la table `photos`
 --
 
-CREATE TABLE `photos` (
+CREATE TABLE IF NOT EXISTS `photos` (
   `id_photos` int(11) NOT NULL,
   `photo` blob NOT NULL,
   `id_housing` int(11) NOT NULL
@@ -144,7 +147,7 @@ INSERT INTO `photos` (`id_photos`, `photo`, `id_housing`) VALUES
 -- Structure de la table `real_estate_agency`
 --
 
-CREATE TABLE `real_estate_agency` (
+CREATE TABLE IF NOT EXISTS `real_estate_agency` (
   `id_agency` int(11) NOT NULL,
   `address` varchar(50) NOT NULL,
   `city` varchar(30) NOT NULL,
@@ -168,7 +171,7 @@ INSERT INTO `real_estate_agency` (`id_agency`, `address`, `city`, `zip_code`, `p
 -- Structure de la table `real_estate_agent`
 --
 
-CREATE TABLE `real_estate_agent` (
+CREATE TABLE IF NOT EXISTS `real_estate_agent` (
   `id_agent` int(11) NOT NULL,
   `firstname` varchar(30) NOT NULL,
   `lastname` varchar(30) NOT NULL,
@@ -191,7 +194,7 @@ INSERT INTO `real_estate_agent` (`id_agent`, `firstname`, `lastname`, `phone`, `
 -- Structure de la table `user`
 --
 
-CREATE TABLE `user` (
+CREATE TABLE IF NOT EXISTS `user` (
   `id_user` int(11) NOT NULL,
   `firstname` varchar(30) NOT NULL,
   `lastname` varchar(30) NOT NULL,

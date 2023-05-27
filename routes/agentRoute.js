@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const jwtservice = require('../services/jwt-service');
 
 const agentController = require('../controllers/agentController');
 
@@ -16,9 +17,9 @@ router.get('/:id_agent', agentController.findById);
 router.get('/agency/:id_agency', agentController.findByAgency);
 
 //Update agent by id
-router.put('/:id_agent', agentController.update);
+router.put('/:id_agent', jwtservice.requireAdmin, agentController.update);
 
 //Delete agent by id
-router.delete('/:id_agent', agentController.delete);
+router.delete('/:id_agent', jwtservice.requireAdmin, agentController.delete);
 
 module.exports = router;

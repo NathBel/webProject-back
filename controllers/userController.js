@@ -22,7 +22,6 @@ exports.create = (req, res) => {
         zip_code: req.body.zip_code,
         email: req.body.email,
         password: req.body.password,
-        isAdmin: req.body.isAdmin
     });
 
     // Save User in the database

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../controllers/userController');
+const jwtservice = require('../services/jwt-service');
 
 //Add a new user
 router.post('/register', userController.create);
@@ -22,6 +23,6 @@ router.get('/email/:email', userController.findByEmail);
 router.put('/:id_user', userController.updateById);
 
 //Delete user by id
-router.delete('/:id_user', userController.delete);
+router.delete('/:id_user', jwtservice.requireAdmin, userController.delete);
 
 module.exports = router;
