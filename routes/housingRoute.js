@@ -67,6 +67,4 @@ router.put('/:id', jwtservice.requireAdmin, housingController.update);
 //Delete housing from id
 router.delete('/:id', jwtservice.requireAdmin, housingController.delete);
 
-
-
 module.exports = router;

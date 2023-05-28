@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require('../controllers/userController');
-const jwtservice = require('../services/jwt-service');
 
 //Add a new user
 router.post('/register', userController.create);
