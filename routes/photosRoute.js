@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage: storage});
 
 //Add a new photo
-router.post('/', upload.single('photo') ,photosController.create);
+router.post('/', jwtservice.requireAdmin, upload.single('photo') ,photosController.create);
 
 //Get all photos by housing
 router.get('/:id_housing', photosController.getAllByIdHousing);
