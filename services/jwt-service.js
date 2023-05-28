@@ -11,7 +11,7 @@ function requireAdmin(req, res, next) {
   const token = req.headers.authorization;
 
   // Verify the JWT
-  jwt.verify(token, 'your-secret-key', (err, decodedToken) => {
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, decodedToken) => {
     if (err) {
       // Invalid or expired token
       res.status(401).json({ error: 'Invalid token.' });

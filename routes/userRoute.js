@@ -23,6 +23,6 @@ router.get('/email/:email', userController.findByEmail);
 router.put('/:id_user', userController.updateById);
 
 //Delete user by id
-router.delete('/:id_user', jwtservice.requireAdmin, userController.delete);
+router.delete('/:id_user', userController.delete);
 
 module.exports = router;

@@ -5,7 +5,7 @@ const jwtservice = require('../services/jwt-service');
 const agencyController = require('../controllers/agencyController');
 
 //Add a new agency
-router.post('/', agencyController.create);
+router.post('/', jwtservice.requireAdmin, agencyController.create);
 
 //Get all agencies in database
 router.get('/', agencyController.getAll);
