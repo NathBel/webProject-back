@@ -30,6 +30,8 @@ app.use(cors({
 	credentials: true,
 }));
 
+app.use(express.static("assets/public"));
+
 const housingRoute = require('./routes/housingRoute');
 const userRoute = require('./routes/userRoute');
 const agencyRoute = require('./routes/agencyRoute');
@@ -50,8 +52,8 @@ app.use((req, res, next) => {
   next(createError(404));
 });
 
-app.listen(port,function(){
-  console.log("Live at Port 8000");
+app.listen(port, () =>{
+  console.log("Live at Port 5000");
 });
 
 

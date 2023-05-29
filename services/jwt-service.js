@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 async function generateToken(dataId, dataIsAdmin, dataFirstname, dataLastname, dataEmail){
-    return jwt.sign({dataId, dataIsAdmin, dataFirstname, dataLastname, dataEmail}, process.env.TOKEN_SECRET, { expiresIn: '24h' });
+    return jwt.sign({dataId, dataIsAdmin, dataFirstname, dataLastname, dataEmail}, process.env.TOKEN_SECRET);
 }
 
 // Verify JWT and check admin status middleware
@@ -12,6 +12,8 @@ function requireAdmin(req, res, next) {
 
   
   if(token !== undefined) {
+      // Remove the 'Bearer ' prefix from the token
+
       const bearer = token.split(' ');
       const bearerToken = bearer[1];
 
@@ -19,12 +21,9 @@ function requireAdmin(req, res, next) {
     jwt.verify(bearerToken, process.env.TOKEN_SECRET, (err, decodedToken) => {
       if (err) {
         // Invalid or expired token
-        console.log("ca passe ?");
-        console.log(token);
         res.status(401).json({ error: 'Invalid token.' });
       } else {
         // Check if user is an admin
-        console.log("ca passe !");
         if (decodedToken.dataIsAdmin === 1) {
           // They were an admin, so continue to the specified next function
           next();
